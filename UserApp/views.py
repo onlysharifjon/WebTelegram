@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from email.mime.multipart import MIMEMultipart
 from .models import Foydalanuvchilar
 from rest_framework.views import APIView
-from .serializers import RegistrationSeralizer, LoginSeralizer
+from .serializers import RegistrationSeralizer, LoginSeralizer,ChatSerializer
 from email.mime.text import MIMEText
 
 
@@ -39,7 +39,6 @@ class LoginApi(APIView):
         user = Foydalanuvchilar.objects.filter(email=email).first()
 
         if user:
-
             sender_email = "mominovsharif12@gmail.com"
             receiver_email = email
             password = "jzut iarx gaks ybut"
@@ -64,3 +63,14 @@ class LoginApi(APIView):
 
         else:
             return Response({"message": "Bunday email mavjud emas !"}, 404)
+
+
+class YozishmaAPI(APIView):
+    serializer_class = ChatSerializer
+    def post(self,request):
+        serializer = ChatSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"Xabar": 'Sizning xabaringiz jo`natildi'})
+        else:
+            return Response(serializer.errors)
